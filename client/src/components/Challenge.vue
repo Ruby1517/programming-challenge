@@ -12,6 +12,7 @@
           v-for="task in tasks"
           :key="task.tasksId"
           :task="task"
+          @updateTaskStatus="handleTaskStatusUpdate"
         />
 
         <!-- Mission one is inside the task input! -->
@@ -27,13 +28,23 @@ import TaskInput from './TaskInput.vue';
 
 /* composables */
 import { useGetTasks } from '@/composables/useGetTasks';
-import { ref } from 'vue';
+import { useSubmitTask } from '../composables/useSubmitTask';
 
 const { tasks, state } = useGetTasks();
-const newTask = ref([]);
+const { submitTask } = useSubmitTask();
+
+const handleTaskStatusUpdate = (updatedTask) => {
+  // Assuming tasks are reactive and updating the tasks array directly
+  const index = tasks.value.findIndex(task => task.tasksId === updatedTask.tasksId);
+  if (index !== -1) {
+    tasks.value[index] = updatedTask;
+    submitTask(updatedTask); // Call the method to submit the updated task to the database
+  }
+};
+
 
 const handleAddTask = (task) => {
-  newTask.value.push(task);
+  tasks.value.push(task);
 };
 </script>
 

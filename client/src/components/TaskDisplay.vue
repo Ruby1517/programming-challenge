@@ -1,5 +1,5 @@
 <template>
-  <div class="task-display">
+  <div class="task-display" @click="toggleTask">
     <!--
       Mission Two: Add ability to check and uncheck tasks
 
@@ -22,35 +22,28 @@
         - Is the code easy to read and understand? - 2 points
     -->
 
-    <input type="checkbox" v-model="isChecked" @click="completeTask" >
-    <span :class="{ 'completed-task': isChecked }">{{ task.content }}</span>    
+    <input type="checkbox" v-model="isChecked" >
+    <span :class="{ 'completed': isChecked }">{{ task.content }}</span>    
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Task } from '../utils/types';
-import { ref, reactive } from 'vue';
+import { ref, defineEmits } from 'vue';
 
-const emit = defineEmits()
- 
-const isChecked = ref<boolean>(false)
+const emit = defineEmits();
+const isChecked = ref<boolean>(false);
 
 // Define a prop to accept the task data from the parent component
 const props = defineProps<{
   task: Task;
 }>();
 
-// Initialize the checked state based on the initial value of isComplete in the task object
-isChecked.value = props.task.isComplete;
-
-const completeTask = () => {
-  isChecked.value = !isChecked.value;   
-  
+const toggleTask = () => {
+  isChecked.value = !isChecked.value;
+  // Emit an event to notify the parent component of the task completion status change
+  emit('updateTaskStatus', { ...props.task, isComplete: isChecked.value });
 }
-
-
-
-
 
 </script>
 

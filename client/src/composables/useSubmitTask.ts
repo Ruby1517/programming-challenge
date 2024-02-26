@@ -34,12 +34,18 @@ export const useSubmitTask = () => {
   const submitTask = async (task: Task) => {
     try {
       state.value = 'loading'
-      const response = await api.post<Task[]>('/addTask', task); 
-     
-        const newTask = response.data        
-        tasks.value.push(newTask);
+      if(task.tasksId) {
+        // If the task has an ID, it means it's an existing task that needs to be updated
+        const response = await api.put(`/tasks/${task.tasksId}`, task);
+        console.log('Task updated successfully:', response.data);
+      } else {
+        // If the task doesn't have an ID, it's a new task that needs to be added
+        const response = await api.post('/addTask', task);
+        console.log('New task added successfully:', response.data);
         location.reload()
         state.value = 'loaded';
+      }    
+     
     } catch(error) {
       console.error(error);
       state.value = 'failed';

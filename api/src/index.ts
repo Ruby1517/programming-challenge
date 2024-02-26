@@ -68,13 +68,13 @@ const init = async () => {
    } 
   });
 
-  // Update data
+  //Update data
   server.route({
     method: 'PUT',
     path: '/tasks/{taskId}',
     handler: async(r, h) => {
       const { taskId } = r.params;
-      const { isComplete } = r.payload;
+      const isComplete = r.payload;
       try { 
         //Update is_complet column in tasks table
         await db('tasks').where('tasks_id', taskId).update('is_complete', isComplete);
@@ -87,7 +87,6 @@ const init = async () => {
   });
 
 
-  
   // Delete task
   server.route({
     method: 'DELETE',
