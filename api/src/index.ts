@@ -71,7 +71,7 @@ const init = async () => {
   //Update data
   server.route({
     method: 'PUT',
-    path: '/tasks/{taskId}',
+    path: '/updateTask/{taskId}',
     handler: async(r, h) => {
       const { taskId } = r.params;
       const isComplete = r.payload;

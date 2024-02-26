@@ -33,10 +33,10 @@ export const useSubmitTask = () => {
 
   const submitTask = async (task: Task) => {
     try {
-      state.value = 'loading'
+      state.value = 'loading';
       if(task.tasksId) {
         // If the task has an ID, it means it's an existing task that needs to be updated
-        const response = await api.put(`/tasks/${task.tasksId}`, task);
+        const response = await api.put(`/updateTask/${task.tasksId}`, task);
         console.log('Task updated successfully:', response.data);
       } else {
         // If the task doesn't have an ID, it's a new task that needs to be added

@@ -29,11 +29,12 @@ import TaskInput from './TaskInput.vue';
 /* composables */
 import { useGetTasks } from '@/composables/useGetTasks';
 import { useSubmitTask } from '../composables/useSubmitTask';
+import type { Task } from '@/utils/types';
 
 const { tasks, state } = useGetTasks();
 const { submitTask } = useSubmitTask();
 
-const handleTaskStatusUpdate = (updatedTask) => {
+const handleTaskStatusUpdate = (updatedTask: { tasksId: number; content: string; isComplete: boolean; order: number; }) => {
   // Assuming tasks are reactive and updating the tasks array directly
   const index = tasks.value.findIndex(task => task.tasksId === updatedTask.tasksId);
   if (index !== -1) {
@@ -43,8 +44,14 @@ const handleTaskStatusUpdate = (updatedTask) => {
 };
 
 
-const handleAddTask = (task) => {
-  tasks.value.push(task);
+const handleAddTask = async(newTask: Task) => {
+  try {
+    const addedTask = await submitTask(newTask);
+    tasks.value.push(addedTask); //add the newly added task to the task list
+  } catch (error) {
+    console.error('Error adding task:', error);
+  }
+  
 };
 </script>
 
@@ -58,7 +65,7 @@ const handleAddTask = (task) => {
 
   .wrapper {
     width: 350px;
-    background-color: var(--color-input-background-extra-light);
+    background-color: var(--color-input-background-light);
     margin: var(--space-2) var(--space-3);
     h1 {
       padding: 0px 20px;
